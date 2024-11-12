@@ -40,5 +40,23 @@ router.get('/:trackId', async (req, res) => {
     }
 });
 
+// Put /tracks/:id
+router.put('/:trackId', async (req, res) => {
+    try {
+        const updatedJukebox = await Jukebox.findByIdAndUpdate(req.params.trackId, req.body, { new: true });
+        if (!updatedJukebox) {
+            res.status(404);
+            throw new Error('Track not found');
+        }
+        res.status(200).json(updatedJukebox);
+    } catch (error) {
+        if (res.statusCode === 404) {
+            res.json({ error: error.message });
+        } else {
+            res.status(500).json({ error: error.message });
+        }
+    }
+});
+
 
 module.exports = router;
